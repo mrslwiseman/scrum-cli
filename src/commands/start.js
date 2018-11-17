@@ -1,25 +1,16 @@
-const { Command, flags } =require( '@oclif/command')
-const { shuffle, repeat } =require( 'lodash')
-const {cli} =require('cli-ux')
-const chalk =require( 'chalk')
-const uuid = require('uuid');
-
-const knex = require('knex')({
-  client: 'sqlite3',
-  connection: {
-    filename: "./dev.sqlite3",
-  }
-});
+const { Command, flags } = require('@oclif/command')
+const { shuffle, repeat } = require('lodash')
+const { cli } = require('cli-ux')
+const chalk = require('chalk')
+const uuid = require('uuid')
+const { getKnex } = require('../knex')
 
 class StartCommand extends Command {
   // description = 'An Interactive Scrum Tool.'
 
-  // flags = {
-  //   help: flags.help({ char: 'h' }),
-  // }
-
   async getNoteYesterday(id) {
     try {
+      const knex = await getKnex()
       const [{ data: lastNote } = {}] = await knex('note')
         .where('user_id', id)
         .orderBy('created_at')
@@ -35,16 +26,17 @@ class StartCommand extends Command {
 
   async saveNotes(notes) {
     try {
+      const knex = await getKnex()
+
       for (const note of notes) {
-        const notesArray = notes.map((note) => ({
+        const notesArray = notes.map(note => ({
           id: uuid(),
           user_id: note.userId,
           data: JSON.stringify(note.data),
           created_at: Date.now(),
-          updated_at: Date.now(),
+          updated_at: Date.now()
         }))
-        await knex('note')
-          .insert(notesArray)
+        await knex('note').insert(notesArray)
       }
     } catch (e) {
       console.log(e)
@@ -54,12 +46,17 @@ class StartCommand extends Command {
   }
 
   async ask(member) {
-    let note = {};
+    let note = {}
     const yesterdaysNote = await this.getNoteYesterday(member.id)
-    const yesterdayRevised = await cli.prompt(`${chalk.blue(member.name)} yesterday (${chalk.italic(yesterdaysNote)})`, { required: false });
+    const yesterdayRevised = await cli.prompt(
+      `${chalk.blue(member.name)} yesterday (${chalk.italic(yesterdaysNote)})`,
+      { required: false }
+    )
     note.yesterday = yesterdayRevised || yesterdaysNote
-    note.today = await cli.prompt(`${chalk.blue(member.name)} today`);
-    note.blocked = await cli.prompt(`${chalk.blue(member.name)} blocked`, { required: false });
+    note.today = await cli.prompt(`${chalk.blue(member.name)} today`)
+    note.blocked = await cli.prompt(`${chalk.blue(member.name)} blocked`, {
+      required: false
+    })
     this.log('\n\n')
     return note
   }
@@ -81,31 +78,49 @@ class StartCommand extends Command {
   }
 
   async run() {
-
     // const { args, flags } = this.parse(Scrum)
-    this.log('Lets go!')
-    const start = Date.now()
+    try {
+      this.log('Lets go!')
+      const start = Date.now()
+      const knex = await getKnex()
 
-    // get users, shuffle
-    const team = await knex('user').where({ active: true })
-    const teamShuffled = shuffle(team)
-    const namesShuffled = teamShuffled.map(({ name }) => name).join(', ')
-    this.withPadding(`Provably fair order today is:  ${namesShuffled}`)
+      // add:
+      // sets up tables prompts for slack webhook
 
-    // ask all the things
-    const notes = await this.prompt(teamShuffled)
+      // add member
+      // remove member
 
-    // save the notes
-    await this.saveNotes(notes)
+      // get users, shuffle
+      const team = await knex('user').where({ active: true })
 
-    // duration
-    const mins = Math.round(((Date.now() - start) / 1000) / 60)
-    const seconds = Math.round(((Date.now() - start) / 1000))
-    this.log(`${mins}m ${seconds}s`)
+      if (!team.length) {
+        this.log('Please run', chalk.bold('scrum add -n [Name]'), 'to add team members.')
+        this.exit(0)
+      }
 
-    // done
-    this.withPadding(chalk.green('Have a good day!'))
-    this.exit(1);
+      const teamShuffled = shuffle(team)
+      const namesShuffled = teamShuffled.map(({ name }) => name).join(', ')
+      this.withPadding(`Provably fair order today is:  ${namesShuffled}`)
+
+      // ask all the things
+      const notes = await this.prompt(teamShuffled)
+
+      // save the notes
+      await this.saveNotes(notes)
+
+      // duration
+      const mins = Math.round((Date.now() - start) / 1000 / 60)
+      const seconds = Math.round((Date.now() - start) / 1000)
+      this.log(`${mins}m ${seconds}s`)
+
+      // done
+      this.withPadding(chalk.green('Have a good day!'))
+      this.exit(1)
+    } catch (e) {
+      this.error(e)
+      this.log('There was an error, have you tried running', chalk.bold('scrum init'), '?')
+      this.exit(0)
+    }
   }
 }
 
@@ -115,7 +130,7 @@ Extra documentation goes here
 `
 
 StartCommand.flags = {
-  name: flags.string({char: 'n', description: 'name to print'}),
+  name: flags.string({ char: 'n', description: 'name to print' })
 }
 
 module.exports = StartCommand

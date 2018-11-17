@@ -28,8 +28,48 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`scrum add`](#scrum-add)
+* [`scrum config`](#scrum-config)
 * [`scrum help [COMMAND]`](#scrum-help-command)
+* [`scrum init`](#scrum-init)
+* [`scrum remove`](#scrum-remove)
 * [`scrum start`](#scrum-start)
+
+## `scrum add`
+
+Describe the command here
+
+```
+USAGE
+  $ scrum add
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/add.js](https://github.com/mrslwiseman/scrum-cli/blob/v0.0.0/src/commands/add.js)_
+
+## `scrum config`
+
+Describe the command here
+
+```
+USAGE
+  $ scrum config
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/config.js](https://github.com/mrslwiseman/scrum-cli/blob/v0.0.0/src/commands/config.js)_
 
 ## `scrum help [COMMAND]`
 
@@ -47,6 +87,39 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.4/src/commands/help.ts)_
+
+## `scrum init`
+
+Describe the command here
+
+```
+USAGE
+  $ scrum init
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/init.js](https://github.com/mrslwiseman/scrum-cli/blob/v0.0.0/src/commands/init.js)_
+
+## `scrum remove`
+
+Describe the command here
+
+```
+USAGE
+  $ scrum remove
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/remove.js](https://github.com/mrslwiseman/scrum-cli/blob/v0.0.0/src/commands/remove.js)_
 
 ## `scrum start`
 

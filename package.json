@@ -10,7 +10,11 @@
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
-    "@oclif/plugin-help": "^2"
+    "@oclif/plugin-help": "^2",
+    "knex": "^0.15.2",
+    "lodash": "^4.17.11",
+    "sqlite3": "^4.0.4",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",

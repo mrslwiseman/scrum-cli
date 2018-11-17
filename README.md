@@ -28,27 +28,8 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`scrum hello`](#scrum-hello)
 * [`scrum help [COMMAND]`](#scrum-help-command)
 * [`scrum start`](#scrum-start)
-
-## `scrum hello`
-
-Describe the command here
-
-```
-USAGE
-  $ scrum hello
-
-OPTIONS
-  -n, --name=name  name to print
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
-```
-
-_See code: [src/commands/hello.js](https://github.com/mrslwiseman/scrum-cli/blob/v0.0.0/src/commands/hello.js)_
 
 ## `scrum help [COMMAND]`
 

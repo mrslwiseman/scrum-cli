@@ -4,6 +4,7 @@ const { cli } = require('cli-ux')
 const chalk = require('chalk')
 const uuid = require('uuid')
 const { getKnex } = require('../knex')
+const { createSlackAlert, formatNotesMessage } = require('../slack')
 
 class StartCommand extends Command {
   // description = 'An Interactive Scrum Tool.'
@@ -13,12 +14,12 @@ class StartCommand extends Command {
       const knex = await getKnex()
       const [{ data: lastNote } = {}] = await knex('note')
         .where('user_id', id)
-        .orderBy('created_at')
+        .orderBy('created_at', 'desc')
         .limit(1)
       if (!lastNote) {
         return 'No notes for yesterday.'
       }
-      return JSON.parse(lastNote).yesterday
+      return JSON.parse(lastNote).today
     } catch (e) {
       this.log('Error getting yesterday', id)
     }
@@ -39,8 +40,7 @@ class StartCommand extends Command {
         await knex('note').insert(notesArray)
       }
     } catch (e) {
-      console.log(e)
-      this.log('Error saving notes')
+      this.log('Error saving notes', e)
       this.log(notes)
     }
   }
@@ -66,6 +66,7 @@ class StartCommand extends Command {
     for (const member of team) {
       notes.push({
         userId: member.id,
+        name: member.name,
         data: await this.ask(member)
       })
     }
@@ -84,13 +85,6 @@ class StartCommand extends Command {
       const start = Date.now()
       const knex = await getKnex()
 
-      // add:
-      // sets up tables prompts for slack webhook
-
-      // add member
-      // remove member
-
-      // get users, shuffle
       const team = await knex('user').where({ active: true })
 
       if (!team.length) {
@@ -112,6 +106,8 @@ class StartCommand extends Command {
       const mins = Math.round((Date.now() - start) / 1000 / 60)
       const seconds = Math.round((Date.now() - start) / 1000)
       this.log(`${mins}m ${seconds}s`)
+
+      await createSlackAlert(formatNotesMessage(notes))
 
       // done
       this.withPadding(chalk.green('Have a good day!'))

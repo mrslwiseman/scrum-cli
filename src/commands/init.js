@@ -1,5 +1,9 @@
-const {Command, flags} = require('@oclif/command')
+const {Command} = require('@oclif/command')
 const { getKnex } = require('../knex')
+const { cli } = require('cli-ux')
+const chalk = require('chalk')
+const uuid = require('uuid')
+
 class InitCommand extends Command {
   async run() {
 
@@ -39,6 +43,62 @@ class InitCommand extends Command {
       table.json('duration')
       table.timestamp('created_at').defaultTo(knex.fn.now())
     })
+    
+    this.log('Creating Config Table')
+    await knex.schema.dropTableIfExists('config')
+    await knex.schema.createTable('config', table => {
+      table.uuid('id').primary()
+      table.string('name').unique()
+      table.json('config')
+      table.timestamp('updated_at').defaultTo(knex.fn.now())
+    })
+
+    // slack related stuff
+    try {
+
+      const hook = await cli.prompt('Please enter slack hook')
+      const channel = await cli.prompt('Please enter slack channel')
+      
+      await knex('config').insert({
+        id: uuid(),
+        name: 'slack',
+        config: JSON.stringify({
+          hook,
+          channel
+        })
+      })
+
+      this.log(chalk.green('Slack config set! \n'))
+
+
+      let askAgain = true
+      let users = []
+      this.log('Add some team members! Type \'q\' to finish')
+      while(askAgain){
+        const user = await cli.prompt('Name')
+        if(user === 'q'){
+          askAgain = false
+        }
+        if(askAgain)
+        {
+          users.push(user)
+        }
+      }
+
+      await knex('user').insert(users.map(name => ({
+        id: uuid(),
+        name,
+      })))
+
+      this.log(chalk.green('Successfully added', users.join(', ')))
+      this.log('Run', chalk.bold('scrum start'), 'to begin.')
+
+    } catch(e){
+      this.log(e)
+    }
+
+
+
     this.exit(1)
     // const {flags} = this.parse(InitCommand)
     // const name = flags.name || 'world'

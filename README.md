@@ -37,18 +37,14 @@ USAGE
 
 ## `scrum add`
 
-Describe the command here
+Add a person to scrum
 
 ```
 USAGE
   $ scrum add
 
 OPTIONS
-  -n, --name=name  name to print
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
+  -n, --name=name  Name of team member to add
 ```
 
 _See code: [src/commands/add.js](https://github.com/mrslwiseman/scrum-cli/blob/v0.0.0/src/commands/add.js)_
@@ -105,18 +101,14 @@ _See code: [src/commands/init.js](https://github.com/mrslwiseman/scrum-cli/blob/
 
 ## `scrum remove`
 
-Describe the command here
+Add a person to scrum
 
 ```
 USAGE
   $ scrum remove
 
 OPTIONS
-  -n, --name=name  name to print
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
+  -n, --name=name  Name of team member to remove
 ```
 
 _See code: [src/commands/remove.js](https://github.com/mrslwiseman/scrum-cli/blob/v0.0.0/src/commands/remove.js)_

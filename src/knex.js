@@ -6,7 +6,7 @@ exports.getKnex = _.once(async () => {
   const knex = createKnex({
     client: 'sqlite3',
     connection: {
-      filename: './src/scrum.sqlite3',
+      filename: './scrum.sqlite3',
     }
   })
   return knex

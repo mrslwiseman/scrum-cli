@@ -34,6 +34,7 @@ USAGE
 * [`scrum init`](#scrum-init)
 * [`scrum remove`](#scrum-remove)
 * [`scrum start`](#scrum-start)
+* [`scrum update [CHANNEL]`](#scrum-update-channel)
 
 ## `scrum add`
 
@@ -130,4 +131,15 @@ DESCRIPTION
 ```
 
 _See code: [src/commands/start.js](https://github.com/mrslwiseman/scrum-cli/blob/v0.0.0/src/commands/start.js)_
+
+## `scrum update [CHANNEL]`
+
+update the scrum CLI
+
+```
+USAGE
+  $ scrum update [CHANNEL]
+```
+
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.7/src/commands/update.ts)_
 <!-- commandsstop -->

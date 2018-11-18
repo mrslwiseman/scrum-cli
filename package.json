@@ -48,11 +48,12 @@
     "commands": "./src/commands",
     "bin": "scrum",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-update"
     ],
     "update": {
       "s3": {
-        "host": "http://scrum-cli.s3-ap-southeast-2.amazonaws.com/"
+        "host": "https://s3-ap-southeast-2.amazonaws.com/scrum-cli/"
       }
     }
   },

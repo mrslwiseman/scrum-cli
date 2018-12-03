@@ -2,13 +2,13 @@ const { getKnex } = require('./knex')
 const axios = require('axios')
 
 exports.formatNotesMessage = (notes) => {
-  let msg = ''
+  let msg = '```'
   msg += new Date().toLocaleDateString() + '\n'
   for (let { name, data } of notes) {
     msg += `${name.toUpperCase()}: \n`
     msg += `Yesterday: ${data.yesterday}\n`
     msg += `Today: ${data.today}\n`
-    msg += `Blocked / Challenged: ${data.blocked || ''}\n\n`
+    msg += `Blocked / Challenged: ${data.blocked || ''}\n\n\`\`\``
   }
   return msg
 }
